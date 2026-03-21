@@ -35,9 +35,9 @@ Item {
 			id: json
 			property JsonObject theme : JsonObject {
 				property string scheme: "dark"
-				property color accent: "violet"
+				property color accent: "#7fffcc"
 				property JsonObject background: JsonObject {
-					property string image: "%%/abyss/wallpaper.jpg"
+					property string image: "byss/abyss-background.jpg"
 					property color color: "black"
 				}
 			}
@@ -127,11 +127,15 @@ Item {
 	}
 
 	function expandPath(str) { 
-		var file = str.split("%%").join(Quickshell.env("HOME") + "/.local/share/abyss/themes")
+		var file = Quickshell.env("HOME") + "/.local/share/abyss/themes/" + str)
 		if (fileExists(file)) return file
-		file = str.split("%%").join("/usr/local/share/abyss/themes")
+		var file = "/usr/local/share/abyss/themes/" + str)
 		if (fileExists(file)) return file
-		return str.split("%%").join(Quickshell.shellDir + "/assets/themes")
+		var file = "/usr/share/abyss/themes/" + str)
+		if (fileExists(file)) return file
+		var file = Quickshell.shellDir + "abyss/themes/" + str)
+		if (fileExists(file)) return file
+		return str
 	}
 
 	function tint(color, amount) {

@@ -1,0 +1,11 @@
+// From: https://github.com/caelestia-dots/shell
+
+import Quickshell
+import QtQuick
+
+ShaderEffect {
+    required property Item source
+    required property Item maskSource
+
+    fragmentShader: Quickshell.shellDir + "/shaders/qsb/opacitymask.frag.qsb"
+}

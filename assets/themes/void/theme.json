@@ -1,0 +1,29 @@
+{
+	"theme": {
+		"background": {
+			"image": "%%/void/wallpaper.jpg",
+			"color": "black"
+		},
+		"scheme": "dark",
+		"accent": "#478061"
+	},
+	"fonts": {
+		"normal": {
+			"family": "",
+			"size": 14
+		},
+		"mono": {
+			"family": "JetBrainsMono Nerd Font",
+			"size": 16
+		}
+	},
+	"mouse": {
+		"name": "Afterglow",
+		"size": 48
+	}
+}
+
+
+
+
+

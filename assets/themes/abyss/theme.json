@@ -1,11 +1,11 @@
 {
 	"theme": {
 		"background": {
-			"image": "%%/abyss/wallpaper.jpg",
+			"image": "abyss/abyss-background.jpg",
 			"color": "black"
 		},
 		"scheme": "dark",
-		"accent": "#ee82ee"
+		"accent": "#7fffcc"
 	},
 	"fonts": {
 		"normal": {
@@ -18,7 +18,7 @@
 		}
 	},
 	"mouse": {
-		"name": "Afterglow",
+		"name": "ArcMidnight",
 		"size": 48
 	}
 }

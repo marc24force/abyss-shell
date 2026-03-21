@@ -1,7 +1,7 @@
 {
 	"theme": {
 		"background": {
-			"image": "%%/void/wallpaper.jpg",
+			"image": "void/void-background.png",
 			"color": "black"
 		},
 		"scheme": "dark",

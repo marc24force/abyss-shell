@@ -2,7 +2,7 @@
 
 Abyss Shell is a Quickshell-based shell interface for [Abyss](https://github.com/marc24force/abyss), designed for keyboard-driven workflows. To take full advantage of its features, a Window Manager is recommended. Currently, only [Niri](https://github.com/niri-wm/niri) is officially supported.
 
-Abyss Shell communicates with Abyss via Quickshell IPC. Use `qs ipc show` to explore available operations.
+Abyss Shell communicates with Abyss via Quickshell IPC. Use `abyss-shell ipc show` to explore available operations.
 
 ---
 
@@ -50,7 +50,7 @@ Then:
 export ABYSS_DIR=${LOCAL_DIR}/share/abyss
 mkdir -p ${ABYSS_DIR}
 git clone https://github.com/marc24force/abyss-shell.git ${ABYSS_DIR}/abyss-shell
-echo "qs -p ${ABYSS_DIR}" > ${LOCAL_DIR}/bin/abyss-shell
+echo "qs -p ${ABYSS_DIR} \$@" > ${LOCAL_DIR}/bin/abyss-shell
 chmod +x ${LOCAL_DIR}/bin/abyss-shell
 ```
 

@@ -100,7 +100,7 @@ echo "Cloning abyss-shell into $REPO_DIR..."
 $SUDO_CMD git clone https://github.com/marc24force/abyss-shell.git "$REPO_DIR"
 
 # Create executable wrapper
-echo "qs -p $SHARE_DIR/abyss-shell" | $SUDO_CMD tee "$BIN_DIR/abyss-shell" > /dev/null
+echo "qs -p $SHARE_DIR/abyss-shell \$@" | $SUDO_CMD tee "$BIN_DIR/abyss-shell" > /dev/null
 $SUDO_CMD chmod +x "$BIN_DIR/abyss-shell"
 
 # Create update script

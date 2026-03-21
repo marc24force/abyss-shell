@@ -127,13 +127,13 @@ Item {
 	}
 
 	function expandPath(str) { 
-		var file = Quickshell.env("HOME") + "/.local/share/abyss/themes/" + str)
+		var file = Quickshell.env("HOME") + "/.local/share/abyss/themes/" + str
 		if (fileExists(file)) return file
-		var file = "/usr/local/share/abyss/themes/" + str)
+		var file = "/usr/local/share/abyss/themes/" + str
 		if (fileExists(file)) return file
-		var file = "/usr/share/abyss/themes/" + str)
+		var file = "/usr/share/abyss/themes/" + str
 		if (fileExists(file)) return file
-		var file = Quickshell.shellDir + "abyss/themes/" + str)
+		var file = Quickshell.shellDir + "abyss/themes/" + str
 		if (fileExists(file)) return file
 		return str
 	}

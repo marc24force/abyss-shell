@@ -37,7 +37,7 @@ Item {
 				property string scheme: "dark"
 				property color accent: "#7fffcc"
 				property JsonObject background: JsonObject {
-					property string image: "byss/abyss-background.jpg"
+					property string image: "abyss/abyss-background.jpg"
 					property color color: "black"
 				}
 			}

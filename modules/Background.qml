@@ -21,7 +21,7 @@ Variants {
 				fillMode: Image.PreserveAspectCrop
 
 				source: Theme.background.image
-				visible: Theme.background.image != null
+				visible: Theme.background.image != ""
 			}
 
 			color: Theme.background.color

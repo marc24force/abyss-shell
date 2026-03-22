@@ -4,6 +4,9 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 
+import qs.widgets
+import qs.services
+
 Item {
 	id: root
 
@@ -17,55 +20,50 @@ Item {
 	readonly property string themeDir: configDir + "/abyss"
 	readonly property string themeFile: themeDir + "/theme.json"
 
-	// Theme file
-	FileView {
+	FileView { // Theme file
 		id: theme_file
 		path: themeFile
 
 		watchChanges: true
 		onFileChanged: reload()
-		onAdapterUpdated: writeAdapter()
+		onAdapterUpdated: {
+			if (!json.blockAdapterUpdates) {
+				writeAdapter()
+				console.info("Updating config theme file")
+			}
+		}
+
+		blockLoading: true
+		blockWrites: true
 
 		onLoadFailed: function(error) {
 			console.warn("Failed to load theme.json:", FileViewError.toString(error))
 		}
 		onLoaded: console.info("Successfuly loaded config theme file")
 
-		JsonAdapter {
+		ThemeAdapter {
 			id: json
-			property JsonObject theme : JsonObject {
-				property string scheme: "dark"
-				property color accent: "#7fffcc"
-				property JsonObject background: JsonObject {
-					property string image: "abyss/abyss-background.jpg"
-					property color color: "black"
-				}
-			}
 		}
+
 	}
 
-	FileView {
+	FileView { // Helper to load read-only themes
 		id: load_theme
 		preload: false
-		blockAllReads: true
+		blockLoading: true
 		onLoadFailed: function(error) {
 			console.warn("Failed to load theme.json:", FileViewError.toString(error))
+			path = ""
 		}
-		onLoaded: {
-			console.info("Successfuly loaded new theme file")
-		}
-	}
-
-	function loadTheme(path: string) {
-		load_theme.path = expandPath(path) + "/theme.json"
-		theme_file.setText(load_theme.text())
+		onLoaded: path = ""
+		ThemeAdapter { id: load_json }
 	}
 
 	// Properties
 	property var cs: json.theme.scheme === "light" ? cs_light : cs_dark
 	property color accent: json.theme.accent
 	property var background: ({
-		image: expandPath(json.theme.background.image),
+		image: json.theme.background.image,
 		color: json.theme.background.color
 	})
 
@@ -103,42 +101,17 @@ Item {
 		function getBackgroundColor(): color { return json.theme.background.color }
 		function setBackgroundColor(color: color) { json.theme.background.color = color }
 		function getBackgroundImage(): string { return json.theme.background.image }
-		function setBackgroundImage(path: string) { json.theme.background.image = path }
+		function setBackgroundImage(path: string) { json.theme.background.image = FileSystem.expandThemePath(path) }
+		function clearBackgroundImage() { json.theme.background.image = "" }
 
-		function set(path: string) { loadTheme(path) }
-	}
-
-	// Utils
-	Process {
-		id: test_proc
-		running: false
-		property var code: 0
-		property var path: ""
-		command: ["test", "-e", path]
-		onExited: function(exitCode,exitStatus) {
-			code = exitCode
+		function set(path: string) { 
+			load_theme.path = FileSystem.expandThemePath(path + "/theme.json")
+			json.copyTheme(load_json)
 		}
 	}
 
-	function fileExists(path) {
-		test_proc.path = path
-		test_proc.running = true
-		return (test_proc.code === 0)
-	}
-
-	function expandPath(str) { 
-		var file = Quickshell.env("HOME") + "/.local/share/abyss/themes/" + str
-		if (fileExists(file)) return file
-		var file = "/usr/local/share/abyss/themes/" + str
-		if (fileExists(file)) return file
-		var file = "/usr/share/abyss/themes/" + str
-		if (fileExists(file)) return file
-		var file = Quickshell.shellDir + "abyss/themes/" + str
-		if (fileExists(file)) return file
-		return str
-	}
-
-	function tint(color, amount) {
+	// Utils
+	function tint(color: color, amount: real) : color {
 		if (amount > 0) {
 			return Qt.rgba(
 				color.r + (1.0 - color.r) * amount,

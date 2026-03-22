@@ -2,9 +2,9 @@
 	"theme": {
 		"background": {
 			"image": "void/void-background.png",
-			"color": "black"
+			"color": "white"
 		},
-		"scheme": "dark",
+		"scheme": "light",
 		"accent": "#478061"
 	},
 	"fonts": {

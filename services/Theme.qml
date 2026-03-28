@@ -10,65 +10,30 @@ import qs.services
 Item {
 	id: root
 
-	// Paths
-	property string configDir: {
-		var xdg = Quickshell.env("XDG_CONFIG_HOME")
-		if (!xdg || xdg == "") xdg= Quickshell.env("HOME")+ "/.config"
-		return xdg
-	}
+	// Instance of the theme loader, this is monitoring the current
+	// theme and monitoring file changes. Altough it shouldn't be
+	// used a lot (only when changing themes) can't be dynamic if 
+	// we want to support hot-reload for themes.
+	ThemeLoader { id: loader }
 
-	readonly property string themeDir: configDir + "/abyss"
-	readonly property string themeFile: themeDir + "/theme.json"
+	// Properties for easy access to the theme values from other
+	// modules.
+	readonly property var cs: loader.getColorScheme() === "light" ? cs_light : cs_dark
+	readonly property color accent: loader.getAccent()
+	readonly property var background: ({
+		image: loader.getBackgroundImage(),
+		color: loader.getBackgroundColor()
+	})
 
-	FileView { // Theme file
-		id: theme_file
-		path: themeFile
-
-		watchChanges: true
-		onFileChanged: reload()
-		onAdapterUpdated: {
-			if (!json.blockAdapterUpdates) {
-				writeAdapter()
-				console.info("Updating config theme file")
-			}
-		}
-
-		blockLoading: true
-		blockWrites: true
-
-		onLoadFailed: function(error) {
-			console.warn("Failed to load theme.json:", FileViewError.toString(error))
-		}
-		onLoaded: console.info("Successfuly loaded config theme file")
-
-		ThemeAdapter {
-			id: json
-		}
-
-	}
-
-	FileView { // Helper to load read-only themes
-		id: load_theme
-		preload: false
-		blockLoading: true
-		onLoadFailed: function(error) {
-			console.warn("Failed to load theme.json:", FileViewError.toString(error))
-			path = ""
-		}
-		onLoaded: path = ""
-		ThemeAdapter { id: load_json }
-	}
-
-	// Properties
-	property var cs: json.theme.scheme === "light" ? cs_light : cs_dark
-	property color accent: json.theme.accent
-	property var background: ({
-		image: json.theme.background.image,
-		color: json.theme.background.color
+	// Properties for easy access to the font values from other
+	// modules.
+	readonly property font font: ({
+		family: loader.getFont().split(":")[0].trim(),
+		pixelSize: parseInt(loader.getFont().split(":")[1])
 	})
 
 	// Color Schemes
-	property var cs_light: ({
+	readonly property var cs_light: ({
 		background: "ivory",
 		foreground: "#3f3f3f",
 		inactive: "#6f6f6f",
@@ -78,7 +43,7 @@ Item {
 		critical: "#ed8796"
 	})
 
-	property var cs_dark: ({
+	readonly property var cs_dark: ({
 		background: "#1a1b26",
 		foreground: "ivory",
 		inactive: "#444b6a",
@@ -92,22 +57,22 @@ Item {
 	IpcHandler {
 		target: "theme"
 
-		function getColorScheme(): string { return json.theme.scheme }
-		function setColorScheme(scheme: string) { json.theme.scheme = scheme }
+		function getColorScheme(): string { return loader.getColorScheme() }
+		function setColorScheme(scheme: string) { loader.setColorScheme(scheme) }
 
-		function getAccent(): color { return json.theme.accent }
-		function setAccent(color: color) { json.theme.accent = color }
+		function getAccent(): color { return loader.getAccent() }
+		function setAccent(color: color) { loader.setAccent(color) }
 
-		function getBackgroundColor(): color { return json.theme.background.color }
-		function setBackgroundColor(color: color) { json.theme.background.color = color }
-		function getBackgroundImage(): string { return json.theme.background.image }
-		function setBackgroundImage(path: string) { json.theme.background.image = FileSystem.expandThemePath(path) }
-		function clearBackgroundImage() { json.theme.background.image = "" }
+		function getBackgroundColor(): color { return loader.getBackgroundColor() }
+		function setBackgroundColor(color: color) { loader.setBackgroundColor(color) }
+		function getBackgroundImage(): string { return loader.getBackgroundImage() }
+		function setBackgroundImage(path: string) { loader.setBackgroundImage(path) }
+		function clearBackgroundImage() { loader.setBackgroundImage("") }
 
-		function set(path: string) { 
-			load_theme.path = FileSystem.expandThemePath(path + "/theme.json")
-			json.copyTheme(load_json)
-		}
+		function getFont(): string { return loader.getFont() }
+		function setFont(font: string, size: int) { loader.setFont(font, size) }
+
+		function set(path: string) { loader.setTheme(path) }
 	}
 
 	// Utils
@@ -128,5 +93,4 @@ Item {
 			)
 		}
 	}
-
 }

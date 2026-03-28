@@ -5,7 +5,7 @@ import qs.services
 Text {
 	id: clock
 	color: Theme.accent
-	font { family: bar.fontFamily; pixelSize: bar.fontSize * 1.5; bold: true }
+	font { family: Theme.font.family; pixelSize: Theme.font.pixelSize * 1.5; bold: true }
 	Layout.alignment: Qt.AlignCenter
 
 	function updateTime() {
@@ -24,7 +24,5 @@ Text {
 	Component.onCompleted: updateTime()
 
 	lineHeight: 0.8  // adjust to reduce spacing
-
-
 }
 

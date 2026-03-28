@@ -7,15 +7,9 @@
 		"scheme": "dark",
 		"accent": "#7fffcc"
 	},
-	"fonts": {
-		"normal": {
-			"family": "",
-			"size": 14
-		},
-		"mono": {
-			"family": "JetBrainsMono Nerd Font",
-			"size": 16
-		}
+	"font": {
+		"family": "JetBrainsMono Nerd Font",
+		"size": 16
 	},
 	"mouse": {
 		"name": "ArcMidnight",

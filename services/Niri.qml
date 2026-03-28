@@ -10,7 +10,17 @@ Item {
 
 	property bool isFullScreen: false
 
-	property var activeScreen: {}
+	property var activeScreenName: {}
+	property int activeScreenId: {
+		var screens = Quickshell.screens
+		for (var i = 0; i < screens.length; i++) {
+			if (screens[i].name === activeScreenName) {
+				return i
+			}
+		}
+		return 0 //if none default to 0
+	}
+
 	property var screenSize: {}
 
 	Process {
@@ -22,7 +32,7 @@ Item {
 				var json = JSON.parse(data)
 				if(json) {
 					niri.screenSize = [json.logical.width, json.logical.height]
-					niri.activeScreen = json.name
+					niri.activeScreenName = json.name
 				}
 
 			}

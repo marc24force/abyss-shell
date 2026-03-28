@@ -7,15 +7,9 @@
 		"scheme": "light",
 		"accent": "#478061"
 	},
-	"fonts": {
-		"normal": {
-			"family": "",
-			"size": 14
-		},
-		"mono": {
-			"family": "JetBrainsMono Nerd Font",
-			"size": 16
-		}
+	"font": {
+		"family": "JetBrainsMono Nerd Font",
+		"size": 16
 	},
 	"mouse": {
 		"name": "Afterglow",

@@ -17,10 +17,6 @@ Variants {
 			screen: modelData
 
 			visible: !Niri.isFullScreen || (Niri.activeScreen != screen.name)
-			// Theme
-			property string fontFamily: "JetBrainsMono Nerd Font"
-			property int fontSize: 16
-
 
 			anchors.top: true
 			anchors.left: true

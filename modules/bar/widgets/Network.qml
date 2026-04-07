@@ -9,7 +9,7 @@ Text {
 	Layout.alignment: Qt.AlignCenter
 	leftPadding: 2
 
-	font { family: Theme.font.family; pixelSize: Theme.font.pixelSize * 1.5}
+	font { family: Theme.getFontMono(); pixelSize: Theme.getFontSize() * 1.5}
 
 
 	property int updateInterval: 5000

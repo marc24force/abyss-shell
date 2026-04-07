@@ -5,12 +5,17 @@ import qs.services
 Text {
 	id: clock
 	color: Theme.accent
-	font { family: Theme.font.family; pixelSize: Theme.font.pixelSize * 1.5; bold: true }
-	Layout.alignment: Qt.AlignCenter
+	font { family: Theme.getFontMono(); pixelSize: Theme.getFontSize() * 1.5; bold: true }
+
+	property string separator: {
+		if(AbyssConfig.bar.anchor === "left" || AbyssConfig.bar.anchor === "right") {
+			return "\n"
+		} else return ":"
+	}
 
 	function updateTime() {
 		const d = new Date()
-		text = Qt.formatTime(d, "HH") + "\n" + Qt.formatTime(d, "mm")
+		text = Qt.formatTime(d, "HH") + separator + Qt.formatTime(d, "mm")
 	}
 
 

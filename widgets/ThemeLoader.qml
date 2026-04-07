@@ -58,7 +58,8 @@ Item {
 			}
 		}
 		property JsonObject font : JsonObject {
-			property string family: "Monospace"
+			property string mono: "Mono"
+			property string sans: "Sans"
 			property int size: 16
 		}
 	}
@@ -83,14 +84,14 @@ Item {
 	function getBackgroundImage(): string { return FileSystem.expandThemePath(theme_file.adapter.theme.background.image) }
 	function setBackgroundImage(path: string) { theme_file.adapter.theme.background.image = path }
 
-
-	// Getter & Setter for the font. Size is reported after ':' for
-	// parsing if required by external tool
-	function getFont(): string { return theme_file.adapter.font.family + " : " + theme_file.adapter.font.size }
-	function setFont(font: string, size: int) { 
-		theme_file.adapter.font.family = font
-		theme_file.adapter.font.size = size
-	}
+	// Getter & Setter for the fonts, for the mono and sans family and
+	// for the size
+	function getFontSize(): int { return theme_file.adapter.font.size }
+	function setFontSize(size: int) { theme_file.adapter.font.size = size }
+	function getFontMono(): string { return theme_file.adapter.font.mono }
+	function setFontMono(family: string) { theme_file.adapter.font.mono = family }
+	function getFontSans(): string { return theme_file.adapter.font.sans }
+	function setFontSans(family: string) { theme_file.adapter.font.sans = family }
 		
 	// Reader to open theme files without modifying them. Defined as a
 	// component as this should only be used on limited ocasions.

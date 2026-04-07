@@ -8,7 +8,7 @@
 		"accent": "#478061"
 	},
 	"font": {
-		"family": "JetBrainsMono Nerd Font",
+		"mono": "JetBrainsMono Nerd Font",
 		"size": 16
 	},
 	"mouse": {

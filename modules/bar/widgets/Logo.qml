@@ -12,7 +12,7 @@ Item {
         id: logo
         anchors.centerIn: parent
 
-	font { family: Theme.font.family; pixelSize: Theme.font.pixelSize * 2}
+	font { pixelSize: Theme.getFontSize() * 2}
 
         text: ""
         color: Theme.cs.inactive
@@ -21,7 +21,7 @@ Item {
 
     ParallelAnimation {
         id: activeAnim
-        running: Niri.activeScreenName === bar.screen.name
+        running: Niri.activeScreenName === top_window.screen.name
         loops: Animation.Infinite
 
         SequentialAnimation {

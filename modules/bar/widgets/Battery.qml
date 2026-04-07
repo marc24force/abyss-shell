@@ -7,7 +7,7 @@ import qs.services
 Text {
 	id: battery
 	Layout.alignment: Qt.AlignCenter
-	font { family: Theme.font.family; pixelSize: Theme.font.pixelSize }
+	font { family: Theme.getFontMono(); pixelSize: Theme.getFontSize() }
 
 	property int updateInterval: 30000
 

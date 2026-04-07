@@ -28,19 +28,20 @@ Item {
 	// Properties for easy access to the font values from other
 	// modules.
 	readonly property font font: ({
-		family: loader.getFont().split(":")[0].trim(),
-		pixelSize: parseInt(loader.getFont().split(":")[1])
+		mono: loader.getFontMono(),
+		sans: loader.getFontSans(),
+		pixelSize: loader.getFontSize()
 	})
 
 	// Color Schemes
 	readonly property var cs_light: ({
 		background: "ivory",
 		foreground: "#3f3f3f",
-		inactive: "#6f6f6f",
+		inactive: "#bfbfa0",
 		shadow: tint(accent, -0.8),
 		success: "#8bd5a0",
 		warning: "#f5a97f",
-		critical: "#ed8796"
+		critical: "darkred"
 	})
 
 	readonly property var cs_dark: ({
@@ -52,6 +53,27 @@ Item {
 		warning: "#f5a97f",
 		critical: "#ed8796"
 	})
+
+	function getColorScheme(): string { return loader.getColorScheme() }
+	function setColorScheme(scheme: string) { loader.setColorScheme(scheme) }
+
+	function getAccent(): color { return loader.getAccent() }
+	function setAccent(color: color) { loader.setAccent(color) }
+
+	function getBackgroundColor(): color { return loader.getBackgroundColor() }
+	function setBackgroundColor(color: color) { loader.setBackgroundColor(color) }
+	function getBackgroundImage(): string { return loader.getBackgroundImage() }
+	function setBackgroundImage(path: string) { loader.setBackgroundImage(path) }
+	function clearBackgroundImage() { loader.setBackgroundImage("") }
+
+	function getFontSize(): int { return loader.getFontSize() }
+	function setFontSize(size: int) { loader.setFontSize(size) }
+	function getFontMono(): string { return loader.getFontMono() }
+	function setFontMono(family: string) { loader.setFontMono(family) }
+	function getFontSans(): string { return loader.getFontSans() }
+	function setFontSans(family: string) { loader.setFontSans(family) }
+
+	function set(path: string) { loader.setTheme(path) }
 
 	// IPC
 	IpcHandler {
@@ -69,8 +91,12 @@ Item {
 		function setBackgroundImage(path: string) { loader.setBackgroundImage(path) }
 		function clearBackgroundImage() { loader.setBackgroundImage("") }
 
-		function getFont(): string { return loader.getFont() }
-		function setFont(font: string, size: int) { loader.setFont(font, size) }
+		function getFontSize(): int { return loader.getFontSize() }
+		function setFontSize(size: int) { loader.setFontSize(size) }
+		function getFontMono(): string { return loader.getFontMono() }
+		function setFontMono(family: string) { loader.setFontMono(family) }
+		function getFontSans(): string { return loader.getFontSans() }
+		function setFontSans(family: string) { loader.setFontSans(family) }
 
 		function set(path: string) { loader.setTheme(path) }
 	}

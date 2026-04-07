@@ -6,7 +6,7 @@ import qs.widgets
 
 Item {
 	id: root
-	anchors.fill: parent
+	//anchors.fill: parent
 
 	property color shadow_color: "black"
 	property real shadow_strength: 2

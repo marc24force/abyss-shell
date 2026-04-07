@@ -1,34 +1,52 @@
 import Quickshell
-import Quickshell.Wayland
-import QtQuick
-import QtQuick.Controls
-import qs.modules
+import Quickshell.Io
+
+import qs.layers
 import qs.services
-import qs.modules.bar
 
 ShellRoot {
 	id: root
+	
+	// Background panel, everything displayed
+	// below normal windows. At the moment only
+	// the background image / color
 	Background {id: background}
-	Bar {id: bar}
-	MainFrame {id: frame}
 
-//	PopupWindow {
-//		anchor.window: frame.instances[Niri.activeScreenId]
-//		anchor.rect.x: anchor.window.width / 2 - width / 2
-//		anchor.rect.y: anchor.window.height / 2 - height / 2
-//
-//		Button {
-//			anchors.centerIn: parent
-//			text: "show popup"
-//
-//			// accessing popupLoader.item will force the loader to
-//			// finish loading on the UI thread if it isn't finished yet.
-//			onClicked: popupLoader.item.visible = !popupLoader.item.visible
-//		}
-//
-//		implicitWidth: 200
-//		implicitHeight: 200
-//
-//		visible: false
-//	}
+	// Bottom panel, everything below normal
+	// windows but on top of the background
+	// This would be desktop icons or widgets
+	// not implemented yet
+	//Bottom {id: bottom}
+
+	// Top panel, everything displayed on top
+	// normal windows, but bellow fullscreen.
+	// Bar, frame and application-like widgets.
+	Top {id: top}
+
+	// Overlay panel, everything displayed 
+	// over all other windows, including 
+	// fullscreen. Popup widgets and other
+	// notifications
+	Overlay {id: overlay}
+
+	// How to access the overlay popups. This
+	// is just a proof of concept. It may be
+	// interesting to have a IpcHandler service
+	// or popup mgr object
+	
+	IpcHandler {
+		target: "popup"
+
+		function power() { 
+			var list = overlay.instances[Niri.activeScreenId].data
+			var id
+			for (var i = 0; i < list.length; i++) {
+				if (list[i].name === "power") {
+					id = i;
+					break;
+				}
+			}
+			list[id].toggle()
+		}
+	}
 }

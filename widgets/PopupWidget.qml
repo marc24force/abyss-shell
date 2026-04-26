@@ -71,16 +71,6 @@ Loader {
 			anchors.centerIn: parent
 			sourceComponent: root.widget
 		}
-		Item {
-			anchors.fill: parent
-			focus: true
-			Keys.onPressed: (event)=> {
-				if (event.key == Qt.Key_Left) {
-					console.log("move left");
-					event.accepted = true;
-				}
-			}
-		}
 		
 		// If modal we will configure the window so it has exclusive focus.
 		// Also, add a dimmed background effect to give focus to the widget.
@@ -113,6 +103,9 @@ Loader {
 	
 	// Item should grab focus when active if is in modal mode
 	focus: root.active && modal
+
+	// When inhibitor is available, add it if modal.
+
 
 	// General functions to show, hide or toggle
 	// the popup. 

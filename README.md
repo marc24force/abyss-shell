@@ -125,7 +125,7 @@ ${XDG_CONFIG_HOME}/abyss/theme.json
 
 ### Menus
 
-* [ ] Power menu
+* [x] Power menu
 * [ ] Quick commands
 * [ ] Apps menu
 * [ ] Clipboard

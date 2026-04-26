@@ -9,23 +9,26 @@ import qs.services
 ShadowRectangle {
 	id: root
 
+	// Required properties that should be passed to the widget,
+	// they define the icon and text for the button and the 
+	// quick action key to start it.
 	required property string icon
 	required property string text
 	required property string key
+	required property string cmd
 
-	required property bool hint
-	required property string selection
-	required property string pressed
-	required property bool error
-
-
+	// The implicit width and height of the button, varying 
+	// depending on the contents, but with a minimum size of 
+	// 100.
 	implicitWidth: (layout.width > 100) ? layout.width : 100
 	implicitHeight: (layout.height > 100) ? layout.height : 100
 
-	property color text_color: root.selection === root.key ? Theme.cs.foreground : Theme.cs.inactive
-	color: root.pressed === root.key ? Theme.cs.inactive : Theme.cs.background
-	shadow_color: error ? Theme.cs.critical : Theme.cs.shadow
+	// Properties that change depending on the state.
+	property color text_color: state != "" ? Theme.cs.foreground : Theme.cs.inactive
+	color: state === "confirmed" ? Theme.cs.inactive : Theme.cs.background
 
+	// This is the main button layout which consists of the 
+	// icon and name.
 	ColumnLayout {
 		id: layout
 		anchors.centerIn: parent
@@ -44,16 +47,35 @@ ShadowRectangle {
 		}
 	}
 
+	// Hint text. When hint is set the color changes to foreground and
+	// turns bold. Only lasts until hint_timer triggers.
 	Text {
+		id: hint_text
 		text: root.key
-		color: root.hint ? Theme.cs.foreground : Theme.cs.inactive
+		color: hint.running ? Theme.cs.foreground : Theme.cs.inactive
 		font.family: Theme.getFontSans()
-		font.bold: root.hint
+		font.bold: hint.running
 		font.pixelSize: Theme.getFontSize() * 0.75
 		x: (parent.width - width) * 0.90 
 		y: 10
 	}
+	
+	// Timer representing the hint state, when the timer is active 
+	// tells if the hint is enabled or not.
+	Timer {
+		id: hint;
+		interval: 5000
+	}
 
+	// Similar to hint, the error state is managed by the error
+	// animation.
+	InvalidInputAnimation {
+		id: error
+		target: root
+	}
+
+	// This is a button so it captures mouse actions and issues the
+	// corresponding MenuEvents.
 	MouseArea {
 		id: mouseArea
 		anchors.fill: parent
@@ -63,5 +85,46 @@ ShadowRectangle {
 		onEntered: MenuEvents.selected(key)
 		onClicked: MenuEvents.confirmed(key)
 	}	
+	
+	// Handle incoming MenuEvents.
+	Connections {
+		target: MenuEvents
+
+		// Only enabled if not handling an error.
+		enabled: !error.running
+
+		// If the selected key is itself, change the state to
+		// selected, but go to idle if not.
+		function onSelected(key) {
+			if (key === root.key) state = "selected"
+			else state = ""
+		}
+
+		// If the confirmed key is itself, change the state to
+		// confirmed, but go to idle if not.
+		function onConfirmed(key) {
+			if (key === root.key) state = "confirmed"
+			else state = ""
+		}
+
+		// Start error animation when receiving the signal.
+		function onError() { error.start() }
+
+		// Start hint when receiving a help signal.
+		function onHelp() { hint.start() }
+	}
+
+	// Kill switch to execute the command. It gives a grace period
+	// to have a visual feedback of the confirmed action.
+	// Menu is canceled afterwards as the action is emmited.
+	Timer {
+		running: state === "confirmed"
+		interval: 200
+		onTriggered: {
+			Quickshell.execDetached(root.cmd.split(" "))
+			MenuEvents.canceled()
+		}
+	}
+
 
 }

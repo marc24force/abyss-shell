@@ -46,7 +46,6 @@ Variants {
 				id: mouseCancelArea
 				anchors.fill: parent
 				onClicked: {
-					console.log("error")
 					MenuEvents.canceled()
 				}
 			}	

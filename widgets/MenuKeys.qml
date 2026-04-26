@@ -2,19 +2,21 @@ import Quickshell
 import QtQuick
 
 import qs.services
+
 // This item helps manage keyboard control of menus, it emits a signal
 // when an item is selected or confirmed. It can also emit an error if
-// an invalid key is pressed.
+// an invalid key is pressed or a help signal if the defined helpKey 
+// is pressed.
 Item {
-	// Whe should get focus if the parent has focus.
-	focus: parent.focus
-
-	// When confirming the keypress we must know which is the 
-	// parent current selection key, it must be passed here.
-	required property string selection
+	// This requires focus
+	focus: true
 
 	// List of valid keys to select from.
 	required property var list
+
+	// When confirming the keypress we must know which is the 
+	// parent current selection key.
+	property string selection: ""
 
 	// To configure the helpKey key, by default is '?'.
 	property string helpKey: "?"
@@ -51,8 +53,8 @@ Item {
 				else MenuEvents.selected(key)
 			} else {
 				// Avoid modifier keys to trigger the error.
-				// but send error signal. Early return to
-				// avoid accpeting the input.
+				// Send error signal. Early return to
+				// avoid accepting the input.
 				if (key != "") MenuEvents.error()
 				return
 			}
@@ -60,4 +62,13 @@ Item {
 		event.accepted = true
 	}
 
+	// We monitor the selected event to know which is the current
+	// selection. onCanceled and onConfirmed are required due to
+	// MenuKeys not being inside the PowerMenu component.
+	Connections {
+		target: MenuEvents
+		function onSelected(key) { selection = key }
+		function onCanceled() { selection = "" }
+		function onConfirmed(key) { selection = "" }
+	}
 }

@@ -20,5 +20,4 @@ QtObject {
 
 	// Signal emited when the helpKey is pressed.
 	signal help()
-
 }

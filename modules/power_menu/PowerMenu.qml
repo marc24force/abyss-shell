@@ -4,6 +4,7 @@ import QtQuick.Layouts
 
 import qs.services
 import qs.widgets
+import "widgets"
 
 PopupWidget {
 	id: root
@@ -16,110 +17,57 @@ PopupWidget {
 	// dismissed by pressing escape or clicking outside the widget.
 	modal: true
 
+	// This is the menu widget, it is declared as a component to
+	// reduce memory consumption as the widget will be active for
+	// a short period and doesn't need to be constantly loaded.
 	widget: Component {
 		Item {
 			id: widget
-			property int margins: 40
 
+			// Margins arround the displayed elements, 
+			// required to avoid cropping when performing
+			// the invalid input animation.
+			property int margins: 40
 			implicitWidth: layout.implicitWidth + margins
 			implicitHeight: layout.implicitHeight + margins
 
+			// The main component is a keyboard like layout
+			// but only for the left side.
 			SteppedLayout {
 				id: layout
 				anchors.centerIn: parent
 				spacing: 10
-				rows: 2
+				rows: PowerMenuConfig.rows
 
-				model: root.model
+				model: PowerMenuConfig.entries
 				delegate: MenuButton {
 					required property var modelData
 
 					icon: modelData.icon
 					text: modelData.text
 					key: modelData.key
-
-					hint: root.hint
-					error: root.error
-					selection: root.selection
-					pressed: root.pressed
-
+					cmd: modelData.cmd
 				}
 			}
 
-			SequentialAnimation {
-				id: shakeAnim
-				running: root.error
-				loops: 1
-				NumberAnimation { target: widget; property: "y"; to: widget.y - 10; duration: 100; easing.type: Easing.InOutQuad }
-				NumberAnimation { target: widget; property: "y"; to: widget.y + 10; duration: 100; easing.type: Easing.InOutQuad }
-				NumberAnimation { target: widget; property: "y"; to: widget.y - 10; duration: 100; easing.type: Easing.InOutQuad }
-				NumberAnimation { target: widget; property: "y"; to: widget.y; duration: 100; easing.type: Easing.InOutQuad }
-				PauseAnimation {duration: 200}
-
-				onStopped: root.error = false
-			}
-
+			// Handle the cancel menu event, all other events
+			// are managed by each button.
 			Connections {
 				target: MenuEvents
-				function onSelected(key) {
-					selection = key
-				}
-				function onConfirmed(key) {
-					pressed = key
-					var obj = model.find(function(item) { return item.key === key })
-					Quickshell.execDetached(obj.cmd.split(" "))
-					hide()
-				}
-
 				function onCanceled() {hide()}
-				function onHelp() {root.hint = true}
-				function onError() {root.error = true}
 			}
 
-			Component.onCompleted: {
-				root.selection = ""
-				root.pressed = ""
-				root.hint = ""
-				root.error = false
-				shakeAnim.stop()
-			}
 		}
 	}
+	
 
-	/* Everything below should go inside the widget Item*/
-	property bool hint: false
-	property string selection: ""
-	property string pressed: ""
-	property bool error: false
+	/* Everything below should go inside the widget Item once this is done,
+	 * remove also onCanceled and onConfirmed connections from MenuKeys.qml */
 
-	property var model: [
-		{ icon: "", text: "Power Off", key: "Q", cmd: "sudo poweroff" },
-		{ icon: "󰌾", text: "Lock",      key: "W", cmd: "ls" },
-		{ icon: "󰈆", text: "Exit",      key: "E", cmd: "niri msg action quit -s" },
-		{ icon: "󰜉", text: "Restart",   key: "A", cmd: "sudo reboot" },
-		{ icon: "󰤄", text: "Sleep",     key: "S", cmd: "sudo zzz" },
-		{ icon: "󰜗", text: "Hibernate", key: "D", cmd: "sudo zzz -Z" }
-	]
+	 // A listener for menu keys. Emits MenuEvents depending
+	 // on the key-presses.
+	 MenuKeys { 
+		 list: PowerMenuConfig.keys
+	 }
 
-	MouseArea {
-		id: mouseCancelArea
-		onClicked: MenuEvents.canceled()
-	}	
-
-
-
-	MenuKeys { 
-		id: keys
-		selection: root.selection
-		list: model.map(function(item) { return item.key; })
-
-	}
-
-	Timer {
-		id: hint_timer
-		interval: 5000
-		running: root.hint
-		repeat: false
-		onTriggered: hint = false
-	}
 }

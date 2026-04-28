@@ -63,12 +63,10 @@ Item {
 	}
 
 	// We monitor the selected event to know which is the current
-	// selection. onCanceled and onConfirmed are required due to
-	// MenuKeys not being inside the PowerMenu component.
+	// selection.
 	Connections {
 		target: MenuEvents
+		enabled: focus
 		function onSelected(key) { selection = key }
-		function onCanceled() { selection = "" }
-		function onConfirmed(key) { selection = "" }
 	}
 }

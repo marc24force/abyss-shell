@@ -27,21 +27,30 @@ ShadowRectangle {
 	property color text_color: state != "" ? Theme.cs.foreground : Theme.cs.inactive
 	color: state === "confirmed" ? Theme.cs.inactive : Theme.cs.background
 
+	property int icon_size: Theme.getFontSize() * 2.5
+	property int text_size: Theme.getFontSize() * 0.8
+	property int hint_size: Theme.getFontSize() * 0.75
+
 	// This is the main button layout which consists of the 
 	// icon and name.
 	ColumnLayout {
 		id: layout
 		anchors.centerIn: parent
-		Text {
-			text: root.icon
-			font.pixelSize: Theme.getFontSize() * 3
-			color: root.text_color
+		spacing: 10
+
+
+		ColorizedIcon {  
 			Layout.alignment: Qt.AlignCenter
-		}
+			implicitWidth: icon_size  
+			implicitHeight: icon_size  
+			source: FileSystem.expandIconPath(root.icon)  
+			tint: root.text_color  
+		}  
+
 		Text {
 			text: root.text
 			font.family: Theme.getFontSans()
-			font.pixelSize: Theme.getFontSize() * 0.8
+			font.pixelSize: text_size
 			color: root.text_color
 			Layout.alignment: Qt.AlignCenter
 		}
@@ -55,7 +64,7 @@ ShadowRectangle {
 		color: hint.running ? Theme.cs.foreground : Theme.cs.inactive
 		font.family: Theme.getFontSans()
 		font.bold: hint.running
-		font.pixelSize: Theme.getFontSize() * 0.75
+		font.pixelSize: hint_size
 		x: (parent.width - width) * 0.90 
 		y: 10
 	}

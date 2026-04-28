@@ -7,6 +7,10 @@ import Quickshell.Io
 Item {
 	id: root
 
+	property string xdg_data_home: Quickshell.env("XDG_DATA_HOME") != null ? Quickshell.env("XDG_DATA_HOME") : Quickshell.env("HOME") + "/.local/share"
+	property string xdg_config_home: Quickshell.env("XDG_CONFIG_HOME") != null ? Quickshell.env("XDG_CONFIG_HOME") : Quickshell.env("HOME") + "/.config"
+	property string xdg_cache_home: Quickshell.env("XDG_CACHE_HOME") != null ? Quickshell.env("XDG_CACHE_HOME") : Quickshell.env("HOME") + "/.cache"
+
 	Component {
 		id: checker_component
 		FileView {
@@ -32,8 +36,18 @@ Item {
 		return exists
 	}
 
+	function expandIconPath(str) {
+		var file = Quickshell.shellDir + "/assets/icons/" + str + ".svg"
+		if (fileExists(file)) return Qt.resolvedUrl(file)
+		file = Quickshell.shellDir + "/assets/icons/" + str + ".png"
+		if (fileExists(file)) return Qt.resolvedUrl(file)
+		file = str
+		if (fileExists(file)) return file
+		return Quickshell.iconPath(str)
+	}
+
 	function expandThemePath(str) {
-		var file = Quickshell.env("HOME") + "/.local/share/abyss/themes/" + str
+		var file = xdg_data_home + "/abyss/themes/" + str
 		if (fileExists(file)) return file
 		file = "/usr/local/share/abyss/themes/" + str
 		if (fileExists(file)) return file

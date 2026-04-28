@@ -50,6 +50,11 @@ PopupWidget {
 				}
 			}
 
+			// When menu is opened we reset the last selection.
+			// This is required because MenuKeys not being inside
+			// the widget.
+			Component.onCompleted: MenuEvents.selected("")
+
 			// Handle the cancel menu event, all other events
 			// are managed by each button.
 			Connections {
@@ -61,8 +66,9 @@ PopupWidget {
 	}
 	
 
-	/* Everything below should go inside the widget Item once this is done,
-	 * remove also onCanceled and onConfirmed connections from MenuKeys.qml */
+	/* Everything below should go inside the widget Item. Once this is done,
+	 * remove also the Component.onCompleted in the Item. 
+	 */
 
 	 // A listener for menu keys. Emits MenuEvents depending
 	 // on the key-presses.

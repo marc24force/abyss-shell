@@ -10,37 +10,29 @@ Item {
 	required property string source
 	property color tint: "red"
 	property bool asynchronous: true
+	property real light: 0
 
 	Loader {
 		asynchronous: root.asynchronous
 		sourceComponent: Item {
 
-			Item {
-				implicitWidth: root.width
-				implicitHeight: root.height
+			implicitWidth: root.width
+			implicitHeight: root.height
 
-				// First turn image into black and white using
-				// saturation and brightness to increase the 
-				// white component for darker icons.
-				IconImage {  
-					anchors.fill: parent
-					source: root.source
-
-					layer.enabled: true  
-					layer.effect: MultiEffect {  
-						saturation: -1.0
-						brightness: 0.7
-						contrast: 1.0
-					}  
-				}
+			IconImage {  
+				anchors.fill: parent
+				source: root.source
 
 				// Apply the colorization effect.
 				layer.enabled: true  
 				layer.effect: MultiEffect {  
+					brightness: root.light
+					contrast: -root.light
 					colorization: 1.0
 					colorizationColor: root.tint
 				}  
 			}
+
 		}
 	}
 }

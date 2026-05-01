@@ -15,7 +15,7 @@ ShadowRectangle {
 	required property string icon
 	required property string text
 	required property string key
-	required property string cmd
+	required property var cmd
 
 	// The implicit width and height of the button, varying 
 	// depending on the contents, but with a minimum size of 
@@ -25,6 +25,8 @@ ShadowRectangle {
 
 	// Properties that change depending on the state.
 	property color text_color: state != "" ? Theme.cs.foreground : Theme.cs.inactive
+	property color icon_color: state != "" ? Theme.cs.foreground : Theme.cs.inactive
+	property real icon_light: 0
 	color: state === "confirmed" ? Theme.cs.inactive : Theme.cs.background
 
 	property int icon_size: Theme.getFontSize() * 2.5
@@ -44,7 +46,8 @@ ShadowRectangle {
 			implicitWidth: icon_size  
 			implicitHeight: icon_size  
 			source: FileSystem.expandIconPath(root.icon)  
-			tint: root.text_color  
+			light: root.icon_light
+			tint: root.icon_color  
 		}  
 
 		Text {
@@ -130,7 +133,7 @@ ShadowRectangle {
 		running: state === "confirmed"
 		interval: 200
 		onTriggered: {
-			Quickshell.execDetached(root.cmd.split(" "))
+			Quickshell.execDetached(root.cmd)
 			MenuEvents.canceled()
 		}
 	}

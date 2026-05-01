@@ -48,5 +48,17 @@ ShellRoot {
 			}
 			list[id].toggle()
 		}
+
+		function apps() { 
+			var list = overlay.instances[Niri.activeScreenId].data
+			var id
+			for (var i = 0; i < list.length; i++) {
+				if (list[i].name === "apps") {
+					id = i;
+					break;
+				}
+			}
+			list[id].toggle()
+		}
 	}
 }

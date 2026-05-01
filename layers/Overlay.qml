@@ -6,6 +6,7 @@ import Quickshell.Wayland
 
 import qs.services
 import qs.modules.power_menu
+import qs.modules.app_menu
 
 Variants {
 	model: Quickshell.screens
@@ -53,6 +54,7 @@ Variants {
 
 
 			PowerMenu { window: overlay_window }
+			AppMenu { window: overlay_window }
 		}
 	}
 }

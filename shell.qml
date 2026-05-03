@@ -1,3 +1,7 @@
+//@ pragma DataDir $BASE/abyss
+//@ pragma StateDir $BASE/abyss
+////@ pragma CacheDir $BASE/abyss
+
 import Quickshell
 import Quickshell.Io
 

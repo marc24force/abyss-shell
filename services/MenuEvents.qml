@@ -15,6 +15,10 @@ QtObject {
 	// when the Escape key is pressed.
 	signal canceled()
 
+	// Signal emited when an entry is executed. This should be
+	// emitted when validating the confirmed key.
+	signal executed(string entry)
+
 	// Signal emited when an invalid key is pressed.
 	signal error()
 

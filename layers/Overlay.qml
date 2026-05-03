@@ -16,6 +16,9 @@ Variants {
 			WlrLayershell.layer: WlrLayer.Overlay
 			WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
 
+			// This window should not overlap with 
+			// anything else.
+			exclusionMode: ExclusionMode.Ignore
 
 			required property var modelData
 			screen: modelData
@@ -33,16 +36,10 @@ Variants {
 			property bool isFullScreen: Niri.isFullScreen && (Niri.activeScreenName === screen.name)
 
 			// Spawn accross the full screen both in width
-			// and height. Need to add margin when not in
-			// fullscreen. Actually the bar is already 
-			// managed internally
-			anchors {top: true; left: true; right: true; bottom: true}
-			margins {
-				top: isFullScreen ? 0 : AbyssConfig.frame.size
-				left: isFullScreen ? 0 : AbyssConfig.frame.size
-				right: isFullScreen ? 0 : AbyssConfig.frame.size
-				bottom: isFullScreen ? 0 : AbyssConfig.frame.size
-			}
+			// and height.
+			implicitHeight: screen.height
+			implicitWidth: screen.width
+
 			MouseArea {
 				id: mouseCancelArea
 				anchors.fill: parent

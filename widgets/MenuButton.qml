@@ -20,8 +20,8 @@ ShadowRectangle {
 	// The implicit width and height of the button, varying 
 	// depending on the contents, but with a minimum size of 
 	// 100.
-	implicitWidth: (layout.width > 100) ? layout.width : 100
-	implicitHeight: (layout.height > 100) ? layout.height : 100
+	implicitWidth: 100 //(layout.width > 100) ? layout.width : 100
+	implicitHeight: 100 //(layout.height > 100) ? layout.height : 100
 
 	// Properties that change depending on the state.
 	property color text_color: state != "" ? Theme.cs.foreground : Theme.cs.inactive
@@ -45,7 +45,7 @@ ShadowRectangle {
 			Layout.alignment: Qt.AlignCenter
 			implicitWidth: icon_size  
 			implicitHeight: icon_size  
-			source: FileSystem.expandIconPath(root.icon)  
+			source: FileSystem.expandIconPath(root.icon)
 			light: root.icon_light
 			tint: root.icon_color  
 		}  
@@ -55,7 +55,9 @@ ShadowRectangle {
 			font.family: Theme.getFontSans()
 			font.pixelSize: text_size
 			color: root.text_color
-			Layout.alignment: Qt.AlignCenter
+			Layout.alignment: Qt.AlignCenter 
+			Layout.maximumWidth: 80
+			elide: Text.ElideRight
 		}
 	}
 
@@ -133,6 +135,7 @@ ShadowRectangle {
 		running: state === "confirmed"
 		interval: 200
 		onTriggered: {
+			MenuEvents.executed(root.text)
 			Quickshell.execDetached(root.cmd)
 			MenuEvents.canceled()
 		}

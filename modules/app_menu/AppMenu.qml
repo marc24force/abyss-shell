@@ -38,7 +38,6 @@ PopupWidget {
 
 					icon_color: state != "" ? "transparent" : Theme.cs.inactive
 					icon_light: state != "" ? 0 : (Theme.cs === Theme.cs_light ? 0.6 : 0.2)
-
 					icon: modelData.icon
 					text: modelData.text
 					key: modelData.key
@@ -46,25 +45,28 @@ PopupWidget {
 				}
 			}
 
+			property var entries_left: entries.slice(0, Math.ceil(entries.length / 2))
+			property var entries_right: entries.slice(Math.ceil(entries.length / 2))
+
 			RowLayout {
 				id: layout
 				anchors.centerIn: parent
 				spacing: 100
 				SteppedLayout {
 					spacing: 10
-					rows: 2
+					rows: AppMenuConfig.gridConfig[entries.length].rows
 
-					model: entries.filter((entry, index) => index % 6 < 3)
+					model: entries_left
 					delegate: button
 				}
 
 				SteppedLayout {
 					spacing: 10
-					rows: 2
+					rows: AppMenuConfig.gridConfig[entries.length].rows
 
-					stepDirection: SteppedLayout.stepNegative
+					stepDirection: stepNegative
 
-					model: entries.filter((entry, index) => index % 6 >= 3)
+					model: entries_right
 					delegate: button
 				}
 			}
@@ -72,38 +74,77 @@ PopupWidget {
 			// When menu is opened we reset the last selection.
 			// This is required because MenuKeys not being inside
 			// the widget.
-			Component.onCompleted: MenuEvents.selected("")
+			Component.onCompleted: {
+				MenuEvents.selected("")
+			}
 
 			// Handle the cancel menu event, all other events
 			// are managed by each button.
 			Connections {
 				target: MenuEvents
-				function onCanceled() {hide()}
+				function onCanceled() { hide() }
+				function onExecuted(text) { AppHistory.add(text) }
 			}
+
 		}
 	}
 
 	/* Everything below should go inside the widget Item once this is done,
 	 * remove also onCanceled and onConfirmed connections from MenuKeys.qml */
 
+
+	 property string search: ""
+
 	 // List of applications processed to be passed as modelData. The list
-	 // is sorted by app name before a key is assigned to it.
-	 property var entries: DesktopEntries.applications.values
-	 .slice()
-	 .sort((a, b) => {
-		 const textA = a.name.toLowerCase();
-		 const textB = b.name.toLowerCase();
-		 if (textA < textB) return -1;
-		 if (textA > textB) return 1;
-		 return 0;
-	 })
-	 .map((entry, index) => ({
-		 icon: entry.icon,
-		 text: entry.name,
-		 key: AppMenuConfig.keys[index] || '',
-		 cmd: entry.runInTerminal ? ["foot"].concat(entry.command)
-		 : entry.command
-	 }));
+	 // performs a search through name,
+	 property var raw_apps: {  
+		 const apps = DesktopEntries.applications.values;  
+		 const searchLower = search.toLowerCase();  
+
+		 return apps.filter(app =>   
+		 	app.name.toLowerCase().includes(searchLower) ||  
+		 	app.genericName.toLowerCase().includes(searchLower) ||  
+		 	app.categories.some(category => category.toLowerCase().includes(searchLower))  
+		);  
+	 }
+	 
+	 // Size of the app list, this is truncated at certain sizes for correct
+	 // visualization of the menu.
+	 property int apps_size: AppMenuConfig.validSizes.find(size => size <= raw_apps.length) || 0
+
+	 // App list is sorted by adding first the entries in the history by
+	 // preserving the original order, and then the rest.
+	 property var sorted_apps: {  
+		 const historyList = AppHistory.get();  
+		 const recentApps = raw_apps.filter(item => historyList.includes(item.name));  
+		 const otherApps = raw_apps.filter(item => !historyList.includes(item.name));  
+
+		 // Sort recent apps by their position in history (most recent first)  
+		 recentApps.sort((a, b) => {  
+			 const aIndex = historyList.indexOf(a.name);  
+			 const bIndex = historyList.indexOf(b.name);  
+			 return aIndex - bIndex; // Lower index = more recent  
+		 });  
+
+		 return [].concat(recentApps, otherApps);  
+	 };
+
+	 // The actual entry with the icon, text, key and command, mapped to the list of keys.
+	 property var entries: sorted_apps.slice(0, apps_size)
+	 .map((entry, index) => {
+		 const idx = index % (apps_size / 2)
+		 const row = Math.floor(idx / AppMenuConfig.gridConfig[apps_size].cols);
+		 const col = idx % AppMenuConfig.gridConfig[apps_size].cols;
+		 const key = (index < apps_size / 2) ? AppMenuConfig.leftKeys[row * 4 + col] || '' 
+		                                     : AppMenuConfig.rightKeys[row * 4 + col] || '';
+		 return {
+			 icon: entry.icon,
+			 text: entry.name,
+			 key: key,
+			 cmd: entry.runInTerminal ? ["foot"].concat(entry.command)
+			                          : entry.command
+		 };
+	 });
 
 
 	 // A listener for menu keys. Emits MenuEvents depending

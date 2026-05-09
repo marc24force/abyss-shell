@@ -105,7 +105,10 @@ Loader {
 	focus: root.active && modal
 
 	// When inhibitor is available, add it if modal.
-
+	ShortcutInhibitor {  
+		enabled: root.modal
+		window: root.window
+	}
 
 	// General functions to show, hide or toggle
 	// the popup. 

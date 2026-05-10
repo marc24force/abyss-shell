@@ -3,6 +3,19 @@ import QtQuick
 import Quickshell
 
 Item {
+	property var categoryIcons:  [
+		"development",
+		"education",
+		"game",
+		"graphic",
+		"network",
+		"office",
+		"settings",
+		"system",
+		"utility",
+		"videoaudio"
+	]
+
 	property var leftKeys:  ['Q','W','E','R',
 	                         'A','S','D','F',
 	                         'Z','X','C','V',]

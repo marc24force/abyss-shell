@@ -30,7 +30,7 @@ Item {
 		return checker.check(file)
 	}
 
-	function expandIconPath(str) {
+	function expandIconPath(str, fallback) {
 		var file = Quickshell.shellDir + "/assets/icons/" + str + ".svg"
 		if (fileExists(file)) return Qt.resolvedUrl(file)
 		file = Quickshell.shellDir + "/assets/icons/" + str + ".png"
@@ -38,8 +38,7 @@ Item {
 		file = str
 		if (fileExists(file)) return file
 		file = Quickshell.iconPath(str, true)
-		var fallback = str.slice(str.lastIndexOf('/') + 1).charAt(0).toUpperCase()
-		return file ? file : fallback
+		return file ? file : (fallback ? expandIconPath(fallback) : "")
 
 
 	}

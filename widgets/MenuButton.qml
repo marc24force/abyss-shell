@@ -23,6 +23,10 @@ ShadowRectangle {
 	implicitWidth: 100 //(layout.width > 100) ? layout.width : 100
 	implicitHeight: 100 //(layout.height > 100) ? layout.height : 100
 
+	// Fallback icon in case the primary icon can't be found.
+	// This must be provided by abyss-shell.
+	property string fallback: ""
+
 	// Properties that change depending on the state.
 	property color text_color: state != "" ? Theme.cs.foreground : Theme.cs.inactive
 	property color icon_color: state != "" ? Theme.cs.foreground : Theme.cs.inactive
@@ -45,7 +49,7 @@ ShadowRectangle {
 			Layout.alignment: Qt.AlignCenter
 			implicitWidth: icon_size  
 			implicitHeight: icon_size  
-			source: FileSystem.expandIconPath(root.icon)
+			source: FileSystem.expandIconPath(root.icon, root.fallback)
 			light: root.icon_light
 			tint: root.icon_color  
 		}  

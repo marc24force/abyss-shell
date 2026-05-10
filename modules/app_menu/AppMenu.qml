@@ -42,6 +42,7 @@ PopupWidget {
 					text: modelData.text
 					key: modelData.key
 					cmd: modelData.cmd
+					fallback: modelData.fallback
 				}
 			}
 
@@ -132,6 +133,7 @@ PopupWidget {
 	 // The actual entry with the icon, text, key and command, mapped to the list of keys.
 	 property var entries: sorted_apps.slice(0, apps_size)
 	 .map((entry, index) => {
+		 const cat = entry.categories.find(item => AppMenuConfig.categoryIcons.includes(item));
 		 const idx = index % (apps_size / 2)
 		 const row = Math.floor(idx / AppMenuConfig.gridConfig[apps_size].cols);
 		 const col = idx % AppMenuConfig.gridConfig[apps_size].cols;
@@ -142,7 +144,8 @@ PopupWidget {
 			 text: entry.name,
 			 key: key,
 			 cmd: entry.runInTerminal ? ["foot"].concat(entry.command)
-			                          : entry.command
+			                          : entry.command,
+			 fallback: cat ? "apps/" + cat : ""
 		 };
 	 });
 

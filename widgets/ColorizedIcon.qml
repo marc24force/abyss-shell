@@ -32,7 +32,6 @@ Item {
 					colorizationColor: root.tint
 				}  
 			}
-
 		}
 	}
 }

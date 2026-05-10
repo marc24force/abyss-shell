@@ -48,8 +48,6 @@ Variants {
 				}
 			}	
 
-
-
 			PowerMenu { window: overlay_window }
 			AppMenu { window: overlay_window }
 		}

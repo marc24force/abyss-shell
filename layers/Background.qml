@@ -25,13 +25,13 @@ Variants {
 				anchors.fill: parent
 				fillMode: Image.PreserveAspectCrop
 
-				source: Theme.background.image
-				visible: Theme.background.image != ""
+				source: Theme.getBackgroundImage()
+				visible: Theme.getBackgroundImage() != ""
 			}
 
 			// Background color painted below the image
 			// not really used unless the image is set null
-			color: Theme.background.color
+			color: Theme.getBackgroundColor()
 
 			// This window should not overlap with 
 			// anything else.

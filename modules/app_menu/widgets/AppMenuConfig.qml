@@ -4,16 +4,16 @@ import Quickshell
 
 Item {
 	property var categoryIcons:  [
-		"development",
-		"education",
-		"game",
-		"graphic",
-		"network",
-		"office",
-		"settings",
-		"system",
-		"utility",
-		"videoaudio"
+		"Development",
+		"Education",
+		"Game",
+		"Graphic",
+		"Network",
+		"Office",
+		"Settings",
+		"System",
+		"Utility",
+		"AudioVideo"
 	]
 
 	property var leftKeys:  ['Q','W','E','R',

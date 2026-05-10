@@ -145,7 +145,7 @@ PopupWidget {
 			 key: key,
 			 cmd: entry.runInTerminal ? ["foot"].concat(entry.command)
 			                          : entry.command,
-			 fallback: cat ? "apps/" + cat : ""
+			 fallback: cat ? "apps/" + cat.toLowerCase() : ""
 		 };
 	 });
 

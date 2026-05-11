@@ -42,19 +42,22 @@ Item {
 	Keys.onPressed: (event)=> {
 		var key = event.text.toUpperCase()
 
+		// Except for shfit, we will consider keys with modifier as
+		// an error, we capture if the modifiers are pressed.
+		var hasModifiers = (event.modifiers & ~Qt.ShiftModifier) !== Qt.NoModifier  
 		// If the helpKey is pressed we send a help signal.
-		if (key === helpKey) MenuEvents.help()
+		if (key === helpKey && !hasModifiers) MenuEvents.help()
 		else {
 			// Check if the key is in the list, if it is,
 			// send a confirmed or selected signal 
 			// depending on the current selection.
-			if (validKey(list, key)) {
+			if (validKey(list, key) && !hasModifiers) {
 				if (selection === key) MenuEvents.confirmed(key)
 				else MenuEvents.selected(key)
 			} else {
-				// Avoid modifier keys to trigger the error.
-				// Send error signal. Early return to
-				// avoid accepting the input.
+				// Avoid just modifier keys to trigger
+				// the error. Send error signal. Early
+				// return to avoid accepting the input.
 				if (key != "") MenuEvents.error()
 				return
 			}
